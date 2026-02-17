@@ -3,7 +3,7 @@ const mongoose = require("mongoose")
 const userSchema = new mongoose.Schema({
     username:{
         type: String,
-        unique:["true,user name already exits"],                      
+        unique: true,                      
         // unique -> means ek user name ka sath sirf ek he user exist kaar sakta hai
         required:[true,"user name is required already"]
         // required -> means bina user name ka koi sa bhi user create nhi kaar sakte ho

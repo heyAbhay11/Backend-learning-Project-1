@@ -1,7 +1,7 @@
 const postModel = require("../models/post.models")
 const ImageKit = require("@imagekit/nodejs")
 const { toFile } = require("@imagekit/nodejs")
-const jwt = require("jsonwebtoken")
+
 
 const imagekit = new ImageKit({
     privateKey: process.env.IMAGEKIT_PRIVATE_KEY
@@ -9,24 +9,14 @@ const imagekit = new ImageKit({
 
 
 async function createPostController(req, res) {
+
+    if (!req.file) {
+        return res.status(400).json({
+            message: "Image file is required"
+        });
+    }
+
     console.log(req.body, req.file)
-
-    const token = req.cookies.token
-
-    if (!token) {
-        return res.status(401).json({
-            Message: "Token not provided , unauthorized access"
-        })
-    }
-        let decode = null
-
-    try {
-         decode = jwt.verify(token, process.env.JWT_SECRET)
-    } catch (err) {
-        return res.status(401).json({
-            Message: "User not authorized"
-        })
-    }
 
     const file = await imagekit.files.upload({
         file: await toFile(Buffer.from(req.file.buffer), "file"),
@@ -51,6 +41,42 @@ async function createPostController(req, res) {
 
 }
 
+async function getPostController(req, res) {
+   
+    const userId = req.user.id
 
+    const posts = await postModel.find({ user: userId })
+    res.status(200).json({
+        Message: "All posts fetched Successfully",
+        posts
+    })
 
-module.exports = { createPostController }
+}
+
+async function getPostDetailsconstroller(req, res) {
+    
+
+    const userId = req.user.id
+    const postId = req.params.postId
+
+    const post = await postModel.findById(postId)
+    if (!post) {
+        return res.status(404).json({
+            Message: "post not found"
+        })
+    }
+
+    const isValidUser = post.user.toString() === userId
+
+    if (!isValidUser) {
+        return res.status(403).json({
+            message: "forbidden content"
+        })
+    }
+    return res.status(200).json({
+        message: "post fetched successfully.",
+        post
+    })
+}
+
+module.exports = { createPostController, getPostController, getPostDetailsconstroller }

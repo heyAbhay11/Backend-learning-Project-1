@@ -1,21 +1,26 @@
 const mongoose = require("mongoose")
 
 const followSchema = new mongoose.Schema({
-    follower:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"user",
-        required:[true,"follower is required"]
+    follower: {
+        type: String
     },
-    followee:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"user",
-        required:[true,"follower is required"]
+    followee: {
+        type: String
+    },
+    status: {
+        type: String,
+        default: "pending",
+        enum: ["pending", "accepted", "rejected"],
+        message: "status can only be pending ,accepted or rejected"
     }
-},{
-    timestamps:true
+}, {
+    timestamps: true
     // ya bata hai ki ya document kaab create hau tha database ma or last time kaab update hua tha
 })
 
-const followModel = mongoose.model("follows",followSchema)
+followSchema.index({ follower: 1, followee: 1 }, { unique: true })
+
+
+const followModel = mongoose.model("follows", followSchema)
 
 module.exports = followModel

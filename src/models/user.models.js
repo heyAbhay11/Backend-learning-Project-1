@@ -1,5 +1,7 @@
 const mongoose = require("mongoose")
 
+
+// Edge-collection
 const userSchema = new mongoose.Schema({
     username:{
         type: String,

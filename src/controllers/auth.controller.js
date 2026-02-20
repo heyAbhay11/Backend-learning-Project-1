@@ -22,16 +22,19 @@ async function loginController(req, res) {
         })
     }
 
-    const isPasswordValid = await bcrypt.compare(password,user.password)
+    const isPasswordValid = await bcrypt.compare(password, user.password)
 
-    if (!isPasswordValid) { 
+    if (!isPasswordValid) {
         return res.status(401).json({
             Message: "password is invalid"
         })
     }
 
     const token = jwt.sign(
-        { id: user._id },
+        {
+            id: user._id,
+            username: user.username
+        },
         process.env.JWT_SECRET,
         { expiresIn: "1d" }
     )
@@ -74,9 +77,12 @@ async function registercontroller(req, res) {
         username, email, bio, profileImage, password: hash
     })
 
-    const token = jwt.sign({
-        id: user._id
-    }, process.env.JWT_SECRET, { expiresIn: "1d" })
+    const token = jwt.sign(
+        {
+            id: user._id,
+            username: user.username
+        },
+        process.env.JWT_SECRET, { expiresIn: "1d" })
 
     res.cookie("token", token)
     res.status(201).json({

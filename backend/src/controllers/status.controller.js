@@ -84,3 +84,5 @@ async function getFriendsController(req, res) {
         friends
     })
 }
+
+module.exports={getPendingRequestController,acceptRequestController,rejectRequestController,getFriendsController}

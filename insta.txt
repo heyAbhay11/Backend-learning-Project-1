@@ -1,0 +1,27 @@
+                                   Instagram clone
+
+* Authentication -> 
+> register     (1.User ka data save karna database na.  2. Token user ko dena)
+> login
+> logout (Token blacklishting) -> very important asked in Interviews
+>  (optional) otp based Registration
+
+
+* post
+> create post (caption,imgurl,userid,createdat:date time)
+> can see the feed 
+> like post (collection types)
+> save post
+
+* User
+> following
+> followers
+
+
+user ->
+username string
+email string
+password string
+bio 
+followers Array
+profile_image string
